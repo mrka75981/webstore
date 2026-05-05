@@ -1,1 +1,5 @@
 GET http://localhost:5169/items
+
+## Get item 1 
+
+GET http://localhost:5169/items/1
