@@ -2,16 +2,34 @@ using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using webstore.api.Dtos;
 
+// init
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
-
+const string GetItemEndpointName = "GetItem";
 List<ItemDto> items = new List<ItemDto>(); 
 
+// sample data
 InitializeItems();
 
+// Get items
 app.MapGet("/items", () => items);
 
-app.MapGet("/items/{id}", (int id) => items.Find(item => item.ItemID == id));
+// Get a specific item by id
+app.MapGet("/items/{id}", (int id) => items.Find(item => item.ItemID == id)).WithName(GetItemEndpointName);
+
+// Post a new item
+app.MapPost("/items", (CreateItemDto newItem) =>
+{
+    ItemDto  item = new ItemDto
+    {
+        ItemID = items.Count + 1, 
+        Name = newItem.Name,
+        Price = newItem.Price
+    };
+    items.Add(item);
+
+    return Results.CreatedAtRoute("GetItem", new {id = item.ItemID}, item);
+});
 
 app.Run(); 
 

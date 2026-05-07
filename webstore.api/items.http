@@ -1,5 +1,14 @@
 GET http://localhost:5169/items
 
-## Get item 1 
+### Get item 1 
 
-GET http://localhost:5169/items/1
+GET http://localhost:5169/items/4
+
+### Post 
+POST http://localhost:5169/items
+Content-Type: application/json
+
+{
+    "name": "ChickenSoup",
+    "price": 19.99
+}
