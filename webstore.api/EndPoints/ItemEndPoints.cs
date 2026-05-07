@@ -1,3 +1,4 @@
+using webstore.api.Data;
 using webstore.api.Dtos;
 
 namespace webstore.api.EndPoints
@@ -5,26 +6,9 @@ namespace webstore.api.EndPoints
     // Using extension methods the class must be static
     public static class ItemEndPoints
     {
-        private static List<ItemDto> items = [
-            new ItemDto
-            {
-                ItemID = 1,
-                Name = "lasagne",
-                Price = 10.99m
-            },
-            new ItemDto
-            {
-                ItemID = 2,
-                Name = "bread",
-                Price = 2.99m
-            },
-            new ItemDto
-            {
-                ItemID = 3,
-                Name = "spaghetti",
-                Price = 8.99m
-            }
-        ];
+        private static ItemStoreRepository itemStoreRepository = new ItemStoreRepository();
+        private static List<ItemDto> items {get;set;} = itemStoreRepository.GetAllItems();
+        
         public const string GetItemEndpointName = "GetItem";
       
 

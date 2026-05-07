@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using webstore.api.Dtos;
 using webstore.api.Models;
 
 namespace webstore.api.Data;
@@ -63,5 +64,29 @@ public class ItemStoreRepository
             con.Close();
         }
         _items = result;
+    } 
+
+    public List<ItemDto> GetAllItems()
+    {
+        List<ItemDto> result = new List<ItemDto>(); 
+
+        foreach (var category in _categories)
+        {
+            foreach (var item in _items)
+            {
+                if (item.CategoryID == category.CategoryID)
+                {
+                    result.Add(new ItemDto
+                    {
+                        ItemID = item.ItemID,
+                        Name = item.Name,
+                        Price = item.Price
+                    });
+                }
+            }
+        }
+        return result.OrderBy(x => x.ItemID).ToList();
     }
+
+    
 }
