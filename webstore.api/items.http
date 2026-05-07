@@ -11,4 +11,14 @@ Content-Type: application/json
 {
     "name": "ChickenSoup",
     "price": 19.99
+} 
+
+### Put 
+
+PUT http://localhost:5169/items/4
+Content-Type: application/json
+
+{
+    "name": "ChickenSoup with noodles",
+    "price": 19.99
 }
