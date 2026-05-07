@@ -54,6 +54,15 @@ namespace webstore.api.EndPoints
             // Post a new item
             group.MapPost("/", (CreateItemDto newItem) =>
             {
+                /* To prevent inconsistent data 
+                *  You could be tempted to do a check like this 
+                *  if (string.IsNullOrEmpty(newItem.Name)){
+                *     return Results.BadRequest("Name is required");})
+                *  But you would have to do this for each property, 
+                *  and that is verbose and tedious. 
+                *  Instead we use data annotations
+                */
+                
                 ItemDto item = new ItemDto
                 {
                     ItemID = items.Count + 1,
@@ -69,7 +78,7 @@ namespace webstore.api.EndPoints
             // PUT operation items/{anyid} currently using 4
             // expression knows it will get id from url, so this is for UpdateItemDto method
 
-            group.MapPut("/items/{id}", (int id, UpdateItemDto updatedItem) =>
+            group.MapPut("/{id}", (int id, UpdateItemDto updatedItem) =>
             {
                 var index = items.FindIndex(item => item.ItemID == id);
 
