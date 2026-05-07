@@ -2,7 +2,7 @@ GET http://localhost:5169/items
 
 ### Get item 1 
 
-GET http://localhost:5169/items/4
+GET http://localhost:5169/items/6
 
 ### Post 
 POST http://localhost:5169/items

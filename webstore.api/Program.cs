@@ -15,7 +15,14 @@ InitializeItems();
 app.MapGet("/items", () => items);
 
 // Get a specific item by id(4)
-app.MapGet("/items/{id}", (int id) => items.Find(item => item.ItemID == id)).WithName(GetItemEndpointName);
+app.MapGet("/items/{id}", (int id) =>
+{
+// Capture result of Find method
+  var item = items.Find(item => item.ItemID == id);  
+
+  return item is null ? Results.NotFound() : Results.Ok(item);
+})
+.WithName(GetItemEndpointName);
 
 // Post a new item
 app.MapPost("/items", (CreateItemDto newItem) =>
@@ -38,6 +45,15 @@ app.MapPost("/items", (CreateItemDto newItem) =>
 app.MapPut("/items/{id}", (int id, UpdateItemDto updatedItem) => 
 {
    var index = items.FindIndex(item => item.ItemID == id);  
+
+   if (index == -1)
+    {
+        /**
+         * Could argue that this should instead create a new item
+         * Since it would satisfy the requirement of a put request
+         */
+        return Results.NotFound();
+    }
 
    items[index] = new ItemDto
    {
