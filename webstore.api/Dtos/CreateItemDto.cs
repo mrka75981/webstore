@@ -11,5 +11,8 @@ public class CreateItemDto
     public string Name { get; set; } = string.Empty;
     
     [Required] [Range(1,500)]
-    public decimal Price { get; set; }
+    public decimal Price { get; set; } 
+
+    [Range(1,50)] 
+    public int CategoryID { get; set; }
 }

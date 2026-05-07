@@ -1,5 +1,6 @@
 using webstore.api.Data;
 using webstore.api.Dtos;
+using webstore.api.Models;
 
 namespace webstore.api.EndPoints
 {
@@ -7,7 +8,7 @@ namespace webstore.api.EndPoints
     public static class ItemEndPoints
     {
         private static ItemStoreRepository itemStoreRepository = new ItemStoreRepository();
-        private static List<ItemDto> items {get;set;} = itemStoreRepository.GetAllItems();
+        private static List<ItemDto> items {get;set;} = itemStoreRepository.GetAllItemDtos();
         
         public const string GetItemEndpointName = "GetItem";
       
@@ -47,13 +48,17 @@ namespace webstore.api.EndPoints
                 *  Instead we use data annotations
                 */
                 
-                ItemDto item = new ItemDto
+                Item item = new Item
                 {
-                    ItemID = items.Count + 1,
                     Name = newItem.Name,
+                    CategoryID = newItem.CategoryID,
                     Price = newItem.Price
                 };
-                items.Add(item);
+
+                itemStoreRepository.AddItemToDB(item);
+
+
+
                 // The http 201 status code tells us a request has led to the creation of a resource.
                 return Results.CreatedAtRoute("GetItem", new { id = item.ItemID }, item);
             });

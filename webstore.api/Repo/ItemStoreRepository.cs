@@ -66,7 +66,7 @@ public class ItemStoreRepository
         _items = result;
     } 
 
-    public List<ItemDto> GetAllItems()
+    public List<ItemDto> GetAllItemDtos()
     {
         List<ItemDto> result = new List<ItemDto>(); 
 
@@ -86,7 +86,28 @@ public class ItemStoreRepository
             }
         }
         return result.OrderBy(x => x.ItemID).ToList();
+    } 
+
+    public List<Item> GetAllItems()
+    {
+        return new List<Item>(_items);
     }
 
-    
+   public void AddItemToDB(Item item)
+    {
+        using (SqlConnection con = new SqlConnection(_connectionString))
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand(@"EXEC sp_AddNewItem @Name, @Price, @CategoryID", con);
+            cmd.Parameters.AddWithValue("@Name", item.Name);
+            cmd.Parameters.AddWithValue("@Price", item.Price); 
+            cmd.Parameters.AddWithValue("@CategoryID", item.CategoryID);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        } 
+
+        InitializeItems();
+        _items = GetAllItems();
+    }
+
 }
