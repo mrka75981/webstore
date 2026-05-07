@@ -21,4 +21,8 @@ Content-Type: application/json
 {
     "name": "ChickenSoup with noodles",
     "price": 19.99
-}
+} 
+
+
+### Delete 
+Delete http://localhost:5169/items/4 

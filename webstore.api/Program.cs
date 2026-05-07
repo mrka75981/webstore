@@ -14,7 +14,7 @@ InitializeItems();
 // Get items
 app.MapGet("/items", () => items);
 
-// Get a specific item by id
+// Get a specific item by id(4)
 app.MapGet("/items/{id}", (int id) => items.Find(item => item.ItemID == id)).WithName(GetItemEndpointName);
 
 // Post a new item
@@ -32,7 +32,7 @@ app.MapPost("/items", (CreateItemDto newItem) =>
 });
 
 
-// PUT operation items/{anyid}
+// PUT operation items/{anyid} currently using 4
 // expression knows it will get id from url, so this is for UpdateItemDto method
 
 app.MapPut("/items/{id}", (int id, UpdateItemDto updatedItem) => 
@@ -51,6 +51,16 @@ app.MapPut("/items/{id}", (int id, UpdateItemDto updatedItem) =>
 });
 
 
+// Delete operation items/{anyid} but currently using 4
+// We have to provide the id for deletion
+// The Deletion will happen in request wheter the item exist or not.
+app.MapDelete("/items/{id}", (int id) =>
+{
+  items.RemoveAll(item => item.ItemID == id);  
+
+  // Same reason as in Put operation.
+  return Results.NoContent();
+});
 
 app.Run(); 
 
