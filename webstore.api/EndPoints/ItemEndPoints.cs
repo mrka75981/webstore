@@ -73,8 +73,7 @@ namespace webstore.api.EndPoints
             });
 
 
-            // PUT operation items/{anyid} currently using 4
-            // expression knows it will get id from url, so this is for UpdateItemDto method
+            // PUT operation items/{anyid}
 
             group.MapPut("/{id}", (int id, UpdateItemDto updatedItem) =>
             {
@@ -87,7 +86,9 @@ namespace webstore.api.EndPoints
                      * Since it would satisfy the requirement of a put request
                      */
                     return Results.NotFound();
-                }
+                } 
+
+                itemStoreRepository.UpdateItemInDB(id, updatedItem);
 
                 items[index] = new ItemDto
                 {

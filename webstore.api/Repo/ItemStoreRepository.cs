@@ -122,4 +122,22 @@ public class ItemStoreRepository
         InitializeItems();
     }
 
+    public void UpdateItemInDB(int id, UpdateItemDto updateitemDto)
+    {
+        using (SqlConnection con = new SqlConnection(_connectionString))
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand(@"EXEC sp_UpdateItem @itemID, @newItemName, @newItemPrice");
+            cmd.Parameters.AddWithValue("@itemID", id);
+            cmd.Parameters.AddWithValue("@newItemName", updateitemDto.Name); 
+            cmd.Parameters.AddWithValue("@newItemPrice", updateitemDto.Price);
+            cmd.ExecuteNonQuery(); 
+            con.Close();
+        } 
+        InitializeItems();
+    } 
+
+    
+
+
 }
