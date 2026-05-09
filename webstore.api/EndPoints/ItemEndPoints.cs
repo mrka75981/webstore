@@ -57,10 +57,19 @@ namespace webstore.api.EndPoints
 
                 itemStoreRepository.AddItemToDB(item);
 
+                // Refresh the cached list after adding a new item so GET /items returns the latest data.
+                items = itemStoreRepository.GetAllItemDtos();
 
+                ItemDetailsDto itemDetailsDto = new ()
+                {
+                    ItemID = item.ItemID,
+                    Name = item.Name,
+                    Price = item.Price,
+                    CategoryID = item.CategoryID
+                };
 
                 // The http 201 status code tells us a request has led to the creation of a resource.
-                return Results.CreatedAtRoute("GetItem", new { id = item.ItemID }, item);
+                return Results.CreatedAtRoute("GetItem", new { id = itemDetailsDto.ItemID }, itemDetailsDto);
             });
 
 
@@ -98,6 +107,7 @@ namespace webstore.api.EndPoints
             group.MapDelete("/{id}", (int id) =>
             {
                 items.RemoveAll(item => item.ItemID == id);
+                itemStoreRepository.DeleteItemFromDB(id);
 
                 // Same reason as in Put operation.
                 return Results.NoContent();

@@ -10,7 +10,8 @@ Content-Type: application/json
 
 {
     "name": "ChickenSoup",
-    "price": 19.99
+    "price": 19.99, 
+    "categoryID": 1
 } 
 
 ### Put 
@@ -25,4 +26,4 @@ Content-Type: application/json
 
 
 ### Delete 
-Delete http://localhost:5169/items/4 
+Delete http://localhost:5169/items/14

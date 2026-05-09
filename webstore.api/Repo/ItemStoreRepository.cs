@@ -6,7 +6,7 @@ namespace webstore.api.Data;
 
 public class ItemStoreRepository
 {
-    private readonly string _connectionString;
+    private readonly string? _connectionString;
     private List<Item> _items = new List<Item>();
 
     private List<Category> _categories = new List<Category>();
@@ -34,7 +34,7 @@ public class ItemStoreRepository
                 while (dr.Read())
                 {
                     int categoryID = dr["CategoryID"] == DBNull.Value ? 0 : Convert.ToInt32(dr["CategoryID"]);
-                    string name = dr["CategoryName"] == DBNull.Value ? string.Empty : Convert.ToString(dr["CategoryName"]);
+                    string? name = dr["CategoryName"] == DBNull.Value ? string.Empty : Convert.ToString(dr["CategoryName"]);
                     result.Add(new Category { CategoryID = categoryID, Name = name });
                 }
             } 
@@ -55,7 +55,7 @@ public class ItemStoreRepository
                 while (dr.Read())
                 {
                     int itemID = dr["ItemID"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ItemID"]);
-                    string name = dr["ItemName"] == DBNull.Value ? string.Empty : Convert.ToString(dr["ItemName"]);
+                    string? name = dr["ItemName"] == DBNull.Value ? string.Empty : Convert.ToString(dr["ItemName"]);
                     decimal price = dr["Price"] == DBNull.Value ? 0 : Convert.ToDecimal(dr["Price"]);
                     int categoryID = dr["CategoryID"] == DBNull.Value ? 0 : Convert.ToInt32(dr["CategoryID"]);
                     result.Add(new Item { ItemID = itemID, Name = name, Price = price, CategoryID = categoryID });
@@ -107,7 +107,19 @@ public class ItemStoreRepository
         } 
 
         InitializeItems();
-        _items = GetAllItems();
+    } 
+
+    public void DeleteItemFromDB(int itemID)
+    {
+        using (SqlConnection con = new SqlConnection(_connectionString))
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand(@"EXEC sp_DeleteItem @itemID", con);
+            cmd.Parameters.AddWithValue("@itemID", itemID);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        } 
+        InitializeItems();
     }
 
 }
