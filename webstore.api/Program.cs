@@ -8,9 +8,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Validation services for correct input
 
-builder.Services.AddValidation();
+builder.Services.AddValidation(); 
+
+// Adding CORS and policy to frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevCors", policy =>
+    {
+        policy
+        .WithOrigins("http://localhost:5168")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
+
+app.UseCors("DevCors");
 
 app.MapItemsEndpoints();
 

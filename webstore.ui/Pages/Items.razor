@@ -1,0 +1,72 @@
+@page "/items"
+@using webstore.ui.Dtos
+@inject HttpClient Http 
+
+<h3>Items</h3> 
+
+@if (items == null){
+    <p>Loading...</p>
+}
+else{
+    <table class="table"> 
+        <thead> 
+            <tr> 
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items){
+                <tr> 
+                    <td>@item.ItemID</td>
+                    <td>@item.Name</td>
+                    <td>@item.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+} 
+<h4>Add New Item</h4>
+<EditForm Model="newItem" OnValidSubmit="AddItem">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <InputText id="name" @bind-Value="newItem.Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <InputNumber id="price" @bind-Value="newItem.Price" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="categoryId">Category ID:</label>
+        <InputNumber id="categoryId" @bind-Value="newItem.CategoryID" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Item</button>
+</EditForm>
+
+@code {
+    private List<ItemDto>? items;
+    private CreateItemDto newItem = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await Http.GetFromJsonAsync<List<ItemDto>>("items");
+    }
+
+    private async Task AddItem()
+    {
+        var response = await Http.PostAsJsonAsync("items", newItem);
+        if (response.IsSuccessStatusCode)
+        {
+            // Refresh the list
+            items = await Http.GetFromJsonAsync<List<ItemDto>>("items");
+            newItem = new(); // Reset form
+        }
+    }
+}
