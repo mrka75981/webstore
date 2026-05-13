@@ -51,10 +51,17 @@ else{
     </div>
 
     <button type="submit" class="btn btn-primary">Add Item</button>
+</EditForm> 
+
+<h4>Delete Item</h4>
+<EditForm Model="id" OnValidSubmit="DeleteItem">
+
 </EditForm>
 
 @code {
     private string? loadError;
+
+    private int id;
     private List<ItemDto>? items;
     private CreateItemDto newItem = new();
 
@@ -79,5 +86,9 @@ else{
             items = await Http.GetFromJsonAsync<List<ItemDto>>("items");
             newItem = new(); // Reset form
         }
+    } 
+
+    private async Task DeleteItem(){
+
     }
 }
